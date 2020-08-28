@@ -4,7 +4,7 @@ import HomePage from "./pages/homepage/homepage.component";
 import ShopPage from "./pages/shop/shop.component";
 import SignInAndSignUpPage from "./pages/signIn-signUp/signIn-signUp.component";
 import Header from "./components/header/header.component";
-import { auth } from "./firebase/firebase.utils";
+import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
 
 import "./App.css";
 
@@ -19,10 +19,9 @@ class App extends Component {
   unsubscribeFromAuth = null;
 
   componentDidMount() {
-    // Open substriction  would be change when the user sign in/out
-    this.unsubscribeFromAuth = auth.onAuthStateChanged((user) => {
-      this.setState({ currentUser: user });
-      console.log(user);
+    // Open substriction  would be changed when the user sign in/out
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
+      createUserProfileDocument(userAuth)
     });
   }
 
