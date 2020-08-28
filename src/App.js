@@ -21,7 +21,27 @@ class App extends Component {
   componentDidMount() {
     // Open substriction  would be changed when the user sign in/out
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
-      createUserProfileDocument(userAuth)
+      if (userAuth) {
+        const userRef = await createUserProfileDocument(userAuth);
+
+        userRef.onSnapshot((snapShot) => {
+          // where we get the data that is just stored or has already been in our db
+          //check of proparity exists
+
+          // creating new obj that has all prop of snapShots that we want
+          this.setState(
+            {
+              currentUser: {
+                id: snapShot.id,
+                ...snapShot.data(),
+              },
+            },
+            () => console.log(this.state)
+          );
+        });
+      }
+      // when the user signOut set it into null
+      else this.setState({ currentUser: userAuth });
     });
   }
 
