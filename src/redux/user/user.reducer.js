@@ -1,3 +1,5 @@
+import { UserActionTypes } from "./user.types";
+
 //initial state
 const INITAIL_STATE = {
   //null is a value
@@ -7,7 +9,7 @@ const INITAIL_STATE = {
 // whenever the state is undefined it equals to "Default value"
 const userReducer = (state = INITAIL_STATE, action) => {
   switch (action.type) {
-    case "SET_CURRENT_USER":
+    case UserActionTypes.SET_CURRENT_USER:
       return {
         //retun new obj
         ...state,
