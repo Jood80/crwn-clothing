@@ -1,24 +1,23 @@
 import React, { Component } from "react";
 import { Switch, Route } from "react-router-dom";
+import { connect } from "react-redux";
+
 import HomePage from "./pages/homepage/homepage.component";
 import ShopPage from "./pages/shop/shop.component";
 import SignInAndSignUpPage from "./pages/signIn-signUp/signIn-signUp.component";
 import Header from "./components/header/header.component";
 import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
+import { setCurrentUser } from "./redux/user/user.actions";
 
 import "./App.css";
 
 class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      currentUser: null,
-    };
-  }
   // for closing the open sub
   unsubscribeFromAuth = null;
 
   componentDidMount() {
+    const { setCurrentUser } = this.props;
+
     // Open substriction  would be changed when the user sign in/out
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
       if (userAuth) {
@@ -29,19 +28,14 @@ class App extends Component {
           //check of proparity exists
 
           // creating new obj that has all prop of snapShots that we want
-          this.setState(
-            {
-              currentUser: {
-                id: snapShot.id,
-                ...snapShot.data(),
-              },
-            },
-            () => console.log(this.state)
-          );
+          setCurrentUser({
+            id: snapShot.id,
+            ...snapShot.data(),
+          });
         });
       }
       // when the user signOut set it into null
-      else this.setState({ currentUser: userAuth });
+      else setCurrentUser(userAuth);
     });
   }
 
@@ -52,7 +46,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Header currentUser={this.state.currentUser} />
+        <Header />
         <Switch>
           <Route exact path="/" component={HomePage} />
           <Route path="/shop" component={ShopPage} />
@@ -63,4 +57,10 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapDisphatchToProps = (dispatch) => ({
+  setCurrentUser: (user) => dispatch(setCurrentUser(user)),
+});
+
+// first prop is null since we don't need any state from the reducer here.
+
+export default connect(null, mapDisphatchToProps)(App);

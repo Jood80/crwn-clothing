@@ -4,7 +4,7 @@ const INITAIL_STATE = {
   currentUser: null,
 };
 
-// whenever the state is undefined "Default value"
+// whenever the state is undefined it equals to "Default value"
 const userReducer = (state = INITAIL_STATE, action) => {
   switch (action.type) {
     case "SET_CURRENT_USER":
