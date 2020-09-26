@@ -15,3 +15,5 @@ const CartReducer = (state = INTIAL_STATE, action) => {
       return state;
   }
 };
+
+export default CartReducer;
